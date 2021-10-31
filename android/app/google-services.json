@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "193974155924",
+    "project_id": "english-e36ad",
+    "storage_bucket": "english-e36ad.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193974155924:android:b3166086db59b74d939281",
+        "android_client_info": {
+          "package_name": "com.example.flashcard"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "193974155924-36rpah9d6hjavdnou0uc9oqmj23p60ah.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB0V9NaJc-eTey3fsMD6zgRViClKf1B1VM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "193974155924-36rpah9d6hjavdnou0uc9oqmj23p60ah.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
