@@ -1,6 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flashcard/src/model/FlashCard_model.dart';
+import 'package:flashcard/src/model/Topic.dart';
+import 'package:flashcard/src/provider/FlashCard_topic.dart';
 import 'package:flashcard/src/resource/FlashCard.dart';
 import 'package:flutter/material.dart';
+import 'package:flashcard/src/provider/FlashCard_topic.dart';
+import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -10,12 +15,236 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePage extends State<MyHomePage> {
-  var economicData;
-  var contractData;
-  var negotiationData;
-  var marketingData;
-  var commerceData;
-  var businessData;
+  //topic
+  
+  //econimic
+  List<Flash_Card> newListEconomic = [];
+  Flash_Card? economic;
+  //negotiation
+  List<Flash_Card> newListNegotiation = [];
+  Flash_Card? negotiation;
+  List<Topic> newListTopicNeogotiation = [];
+  Topic? topicNeotiation;
+  //contract
+  List<Flash_Card> newListContract = [];
+  Flash_Card? contract;
+  List<Topic> newListTopicContract = [];
+  Topic? topicContract;
+//buil cardtopic
+  Widget _buildCardTopic({required String image, required String name}) {
+    return Card(
+      color: Color(0xffe5ebe7),
+      child: Container(
+        height: 100,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: Colors.blue, width: 2),
+        ),
+        child: Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+              child: Container(
+                width: 100,
+                height: 100,
+                //tạo viền cho hình
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(50),
+                  border: Border.all(color: Colors.white, width: 2),
+                ),
+                //làm ảnh thành hình tròn
+                child: ClipRRect(
+                    borderRadius: BorderRadius.circular(100),
+                    child: Image.network(
+                      image, //ảnh topic
+                      fit: BoxFit.fill,
+                    )),
+              ),
+            ),
+            Text(
+              name, // tên topic
+              style: TextStyle(
+                  color: Colors.blue,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+//build card negotiation và navigator
+  Widget _buildTopicNegotiation() {
+    //build topic
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('topic')
+            .doc('OHoYMlugEvSqutxOcLSr')
+            .collection('negotiation')
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text("Loading");
+          }
+          //duyệt phần tử trong snapshot gán vào List
+          snapshot.data!.docs.forEach((element) {
+            topicNeotiation =
+                Topic(name: element['name'], image: element['image']);
+            newListTopicNeogotiation.add(topicNeotiation!);
+          });
+
+          return  Expanded(
+            child: Column(
+              children: [
+                Container(
+                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    child: Column(
+                        children: newListTopicNeogotiation
+                            .map(
+                              (e) =>
+                                  //topic negotiation
+                                  StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('category')
+                                          .doc('7T11BTgTbgSBx11fubMO')
+                                          .collection('flashcard')
+                                          .snapshots(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                                        if (snapshot.hasError) {
+                                          return Text('Something went wrong');
+                                        }
+
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Text("Loading");
+                                        }
+                                        snapshot.data!.docs.forEach((element) {
+                                          negotiation = Flash_Card(
+                                              name: element["name"],
+                                              spell: element["spell"],
+                                              translation: element["translation"],
+                                              example: element["example"],
+                                              image: element["image"]);
+                                          newListNegotiation.add(negotiation!);
+                                        });
+
+                                        return GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              FlashCard(
+                                                                name:
+                                                                    'Negotiation',
+                                                                snapshot:
+                                                                    newListNegotiation,
+                                                              )));
+                                            },
+                                            child: _buildCardTopic(
+                                                image: e.image, name: e.name));
+                                      }),
+                            )
+                            .toList()
+                        )),
+              ],
+            ),
+          );
+        });
+  }
+// build card contract và navigator
+  Widget _buildTopicContract() {
+    //build topic
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('topic')
+            .doc('OHoYMlugEvSqutxOcLSr')
+            .collection('contract')
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text("Loading");
+          }
+          //duyệt phần tử trong snapshot gán vào List
+          snapshot.data!.docs.forEach((element) {
+            topicContract =
+                Topic(name: element['name'], image: element['image']);
+            newListTopicContract.add(topicContract!);
+          });
+
+          return Expanded(
+            child: Column(
+              children: [
+                Container(
+                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    child: Column(
+                        children: newListTopicContract
+                            .map(
+                              (e) =>
+                                  //topic negotiation
+                                  StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('category')
+                                          .doc('RgOwIV7v4uSLMruSc1h6')
+                                          .collection('flashcard')
+                                          .snapshots(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                                        if (snapshot.hasError) {
+                                          return Text('Something went wrong');
+                                        }
+
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Text("Loading");
+                                        }
+                                        snapshot.data!.docs.forEach((element) {
+                                          contract = Flash_Card(
+                                              name: element["name"],
+                                              spell: element["spell"],
+                                              translation: element["translation"],
+                                              example: element["example"],
+                                              image: element["image"]);
+                                          newListContract.add(contract!);
+                                        });
+
+                                        return GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              FlashCard(
+                                                                name:
+                                                                    'contract',
+                                                                snapshot:
+                                                                    newListContract,
+                                                              )));
+                                            },
+                                            child: _buildCardTopic(
+                                                image: e.image, name: e.name));
+                                      }),
+                            )
+                            .toList()
+                        )),
+              ],
+            ),
+          );
+        });
+  }
+
+
+
+
 
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
@@ -37,377 +266,17 @@ class _MyHomePage extends State<MyHomePage> {
             ),
           ),
         ),
-        body: Container(
-            // future: FirebaseFirestore.instance
-            //     .collection("categories")
-            //     .doc("bnZBd1fEXfGf4WzQxf3G")
-            //     .get(),
-            // builder: (context, snapshot) {
-            //   if (snapshot.connectionState == ConnectionState.waiting) {
-            //     return Center(
-            //       child: CircularProgressIndicator(),
-            //     );
-            //   }
-               child: ListView(
-                children: [
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 8),
-                      child: Column(
-                        children: [
-                          //card 1 economic
-                          FutureBuilder(
-                              future: FirebaseFirestore.instance
-                                  .collection("categories")
-                                  .doc("bnZBd1fEXfGf4WzQxf3G")
-                                  .collection("economic")
-                                  .get(),
-                              builder: (context, snapshot) {
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
-                                  return Center(
-                                    child: CircularProgressIndicator(),
-                                  );
-                                }
-                                economicData = snapshot;
-                                return GestureDetector(
-                                  onTap: () {
-                                    Navigator.of(context)
-                                        .pushReplacement(MaterialPageRoute(
-                                            builder: (context) => FlashCard(
-                                                  
-                                                )));
-                                  },
-                                  child: Card(
-                                    color: Color(0xffe5ebe7),
-                                    child: Container(
-                                      height: 100,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                            color: Colors.blue, width: 2),
-                                      ),
-                                      child: Row(
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                0, 0, 30, 0),
-                                            child: Container(
-                                              width: 100,
-                                              height: 100,
-                                              //tạo viền cho hình
-                                              decoration: BoxDecoration(
-                                                borderRadius:
-                                                    BorderRadius.circular(50),
-                                                border: Border.all(
-                                                    color: Colors.white,
-                                                    width: 2),
-                                              ),
-                                              //làm ảnh thành hình tròn
-                                              child: ClipRRect(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          100),
-                                                  child: Image.asset(
-                                                    "assets/images/economics.png",
-                                                    fit: BoxFit.fill,
-                                                  )),
-                                            ),
-                                          ),
-                                          Text(
-                                            "Economic",
-                                            style: TextStyle(
-                                                color: Colors.blue,
-                                                fontSize: 20,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                          //card 2
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                      builder: (context) => FlashCard(
-                                           
-                                          )));
-                            },
-                            child: Card(
-                              color: Color(0xffe5ebe7),
-                              child: Container(
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border:
-                                      Border.all(color: Colors.blue, width: 2),
-                                ),
-                                child: Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 0, 30, 0),
-                                      child: Container(
-                                        width: 100,
-                                        height: 100,
-                                        //tạo viền cho hình
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          border: Border.all(
-                                              color: Colors.white, width: 2),
-                                        ),
-                                        //làm ảnh thành hình tròn
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            child: Image.asset(
-                                              "assets/images/marketing.png",
-                                              fit: BoxFit.fill,
-                                            )),
-                                      ),
-                                    ),
-                                    Text(
-                                      "Marketing",
-                                      style: TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          //card 3
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                      builder: (context) => FlashCard(
-                                           
-                                          )));
-                            },
-                            child: Card(
-                              color: Color(0xffe5ebe7),
-                              child: Container(
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border:
-                                      Border.all(color: Colors.blue, width: 2),
-                                ),
-                                child: Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 0, 30, 0),
-                                      child: Container(
-                                        width: 100,
-                                        height: 100,
-                                        //tạo viền cho hình
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          border: Border.all(
-                                              color: Colors.white, width: 2),
-                                        ),
-                                        //làm ảnh thành hình tròn
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            child: Image.asset(
-                                              "assets/images/contract.png",
-                                              fit: BoxFit.fill,
-                                            )),
-                                      ),
-                                    ),
-                                    Text(
-                                      "Contract",
-                                      style: TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          //card 4
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                      builder: (context) => FlashCard(
-                                          
-                                          )));
-                            },
-                            child: Card(
-                              color: Color(0xffe5ebe7),
-                              child: Container(
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border:
-                                      Border.all(color: Colors.blue, width: 2),
-                                ),
-                                child: Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 0, 30, 0),
-                                      child: Container(
-                                        width: 100,
-                                        height: 100,
-                                        //tạo viền cho hình
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          border: Border.all(
-                                              color: Colors.white, width: 2),
-                                        ),
-                                        //làm ảnh thành hình tròn
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            child: Image.asset(
-                                              "assets/images/negotiations.png",
-                                              fit: BoxFit.fill,
-                                            )),
-                                      ),
-                                    ),
-                                    Text(
-                                      "Negotiation",
-                                      style: TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          //card 5
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                      builder: (context) => FlashCard(
-                                            
-                                          )));
-                            },
-                            child: Card(
-                              color: Color(0xffe5ebe7),
-                              child: Container(
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border:
-                                      Border.all(color: Colors.blue, width: 2),
-                                ),
-                                child: Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 0, 30, 0),
-                                      child: Container(
-                                        width: 100,
-                                        height: 100,
-                                        //tạo viền cho hình
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          border: Border.all(
-                                              color: Colors.white, width: 2),
-                                        ),
-                                        //làm ảnh thành hình tròn
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            child: Image.asset(
-                                              "assets/images/business_planning.png",
-                                              fit: BoxFit.fill,
-                                            )),
-                                      ),
-                                    ),
-                                    Text(
-                                      "Business Planning",
-                                      style: TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                          //card 6
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.of(context)
-                                  .pushReplacement(MaterialPageRoute(
-                                      builder: (context) => FlashCard(
-                                           
-                                          )));
-                            },
-                            child: Card(
-                              color: Color(0xffe5ebe7),
-                              child: Container(
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  border:
-                                      Border.all(color: Colors.blue, width: 2),
-                                ),
-                                child: Row(
-                                  children: <Widget>[
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 0, 30, 0),
-                                      child: Container(
-                                        width: 100,
-                                        height: 100,
-                                        //tạo viền cho hình
-                                        decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(50),
-                                          border: Border.all(
-                                              color: Colors.white, width: 2),
-                                        ),
-                                        //làm ảnh thành hình tròn
-                                        child: ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(100),
-                                            child: Image.asset(
-                                              "assets/images/contract.png",
-                                              fit: BoxFit.fill,
-                                            )),
-                                      ),
-                                    ),
-                                    Text(
-                                      "Commerce",
-                                      style: TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      )),
-                ],
-              )
-            
-            )
-            );
+        body: Center(
+          child: ListView(
+            children: [
+              _buildTopicNegotiation()
+            ],
+          )
+          
+          )
+           
+          
+        );
   }
 
   Widget _builDrawer() {

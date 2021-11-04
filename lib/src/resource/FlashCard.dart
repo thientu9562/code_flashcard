@@ -1,111 +1,34 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flashcard/icons/app_icon.dart';
+import 'package:flashcard/src/model/FlashCard_model.dart';
+import 'package:flashcard/src/model/FlashCard_model.dart';
 import 'package:flashcard/src/resource/HomePage.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
-import 'package:flashcard/src/model/FlashCard_model.dart';
 
-class FlashCard extends StatefulWidget {
-  // const FlashCard({Key? key}) : super(key: key);
+// class FlashCard extends StatefulWidget {
+//   // const FlashCard({Key? key}) : super(key: key);
+//   final String name;
+//   List<Flash_Card> snapshot;
+//   FlashCard({
+//     required this.name,
+//     required this.snapshot,
+//   });
+//   @override
+//   _FlashCard createState() => _FlashCard( this.name, this.snapshot);
+// }
 
-  @override
-  _FlashCard createState() => _FlashCard();
-}
+class FlashCard extends StatelessWidget {
+  final String name;
+  List<Flash_Card> snapshot;
+  FlashCard({
+    required this.name,
+    required this.snapshot,
+  });
 
-Flash_Card? wordData;
-
-class _FlashCard extends State<FlashCard> {
-  _renderCard(context) {
-    return PageView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Card(
-                      elevation: 0.0,
-                      margin: EdgeInsets.only(
-                          left: 30.0, right: 30.0, top: 20.0, bottom: 5.0),
-                      // color: Colors.blue,
-                      child: FlipCard(
-                        direction: FlipDirection.HORIZONTAL,
-                        speed: 1000,
-                        onFlipDone: (status) {
-                          print(status);
-                        },
-                        front: Container(
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black38,
-                                    offset: Offset(3, 6),
-                                    blurRadius: 6)
-                              ],
-                              color: Color(0xFFa1bcff),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Column(
-                            // mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Container(
-                                height: 30,
-                                width: 30,
-                                // alignment: Alignment.centerRight,
-                                margin: EdgeInsets.fromLTRB(300, 20, 0, 40),
-                                child: Image.asset(
-                                  "assets/images/heart.png",
-                                ),
-                              ),
-
-                              // ảnh
-                              Container(
-                                  height: 200,
-                                  width: 200,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: NetworkImage(
-                                              "assets/images/economics.png")))),
-                              Text(
-                                "Economic",
-                                style: TextStyle(
-                                    fontSize: 15, fontWeight: FontWeight.bold),
-                              ),
-                              Text(
-                                "Flashcard with the economic!",
-                                style: TextStyle(fontSize: 12),
-                              )
-                            ],
-                          ),
-                        ),
-                        back: Container(
-                          decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                    color: Colors.black38,
-                                    offset: Offset(3, 6),
-                                    blurRadius: 6)
-                              ],
-                              color: Color(0xFFa1bcff),
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "ˌekəˈnämik",
-                                style: TextStyle(fontSize: 15),
-                              ),
-                              Text(
-                                "Thuộc về kinh tế",
-                                style: TextStyle(fontSize: 15),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    )
-                  ],
-                );
-              });
-  }
+  // _renderCard(context) {
+  //   return
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -138,7 +61,93 @@ class _FlashCard extends State<FlashCard> {
                 )),
             Container(
               height: size.height * 2 / 3,
-              child: _renderCard(context),
+              child: ListView(
+                     scrollDirection: Axis.horizontal,
+                      children: snapshot.map((e) => 
+                      // thẻ card để tạ khoảng cách giữa các flipcard
+                      Card(
+                          elevation: 0.0,
+                          margin: EdgeInsets.only(
+                              left: 30.0, right: 30.0, top: 20.0, bottom: 5.0),
+                          // color: Colors.blue,
+                          child: FlipCard(
+                            
+                            direction: FlipDirection.HORIZONTAL, // lật ngang
+                            speed: 1000,
+                            onFlipDone: (status) {
+                              print(status);
+                            },
+                            front: Container(
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black38,
+                                        offset: Offset(3, 6),
+                                        blurRadius: 6)
+                                  ],
+                                  color: Color(0xFFa1bcff),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Column(
+                                // mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    height: 30,
+                                    width: 30,
+                                    // alignment: Alignment.centerRight,
+                                    margin: EdgeInsets.fromLTRB(200, 20, 0, 0),
+                                    child: Image.asset(
+                                      "assets/images/heart.png",
+                                    ),
+                                  ),
+
+                                  // ảnh
+                                  Container(
+                                      height: 200,
+                                      width: 200,
+                                      decoration: BoxDecoration(
+                                          image: DecorationImage(
+                                              image: NetworkImage(
+                                                  e.image)))),
+                                  Text(
+                                    e.name,
+                                    style: TextStyle(
+                                        fontSize: 15, fontWeight: FontWeight.bold),
+                                  ),
+                                  Text(
+                                    e.example,
+                                    style: TextStyle(fontSize: 12),
+                                  )
+                                ],
+                              ),
+                            ),
+                            back: Container(
+                              decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.black38,
+                                        offset: Offset(3, 6),
+                                        blurRadius: 6)
+                                  ],
+                                  color: Color(0xFFa1bcff),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    e.spell,
+                                    style: TextStyle(fontSize: 15),
+                                  ),
+                                  Text(
+                                    e.translation,
+                                    style: TextStyle(fontSize: 15),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ).toList()
+                    )
             )
           ],
         ),
