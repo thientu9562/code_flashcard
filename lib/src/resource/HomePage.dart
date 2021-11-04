@@ -1,14 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flashcard/src/model/FlashCard_model.dart';
 import 'package:flashcard/src/model/Topic.dart';
-import 'package:flashcard/src/provider/FlashCard_topic.dart';
+import 'package:flashcard/src/resource/About.dart';
+
 import 'package:flashcard/src/resource/FlashCard.dart';
 import 'package:flutter/material.dart';
-import 'package:flashcard/src/provider/FlashCard_topic.dart';
+
 import 'package:provider/provider.dart';
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+  // const MyHomePage({Key? key, required String title}) : super(key: key);
 
   @override
   _MyHomePage createState() => _MyHomePage();
@@ -16,20 +17,23 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePage extends State<MyHomePage> {
   //topic
-  
-  //econimic
-  List<Flash_Card> newListEconomic = [];
-  Flash_Card? economic;
+
+  //business
+  List<Flash_Card> newListBusiness = [];
+  Flash_Card? business;
+  List<Topic> newListTopicBusiness = [];
+  Topic? topicBusiness;
+
   //negotiation
   List<Flash_Card> newListNegotiation = [];
   Flash_Card? negotiation;
   List<Topic> newListTopicNeogotiation = [];
   Topic? topicNeotiation;
-  //contract
-  List<Flash_Card> newListContract = [];
-  Flash_Card? contract;
-  List<Topic> newListTopicContract = [];
-  Topic? topicContract;
+  //economic
+  List<Flash_Card> newListEconomic = [];
+  Flash_Card? economic;
+  List<Topic> newListTopicEconomic = [];
+  Topic? topicEconomic;
 //buil cardtopic
   Widget _buildCardTopic({required String image, required String name}) {
     return Card(
@@ -73,6 +77,7 @@ class _MyHomePage extends State<MyHomePage> {
       ),
     );
   }
+
 //build card negotiation và navigator
   Widget _buildTopicNegotiation() {
     //build topic
@@ -97,7 +102,7 @@ class _MyHomePage extends State<MyHomePage> {
             newListTopicNeogotiation.add(topicNeotiation!);
           });
 
-          return  Expanded(
+          return Expanded(
             child: Column(
               children: [
                 Container(
@@ -114,7 +119,8 @@ class _MyHomePage extends State<MyHomePage> {
                                           .collection('flashcard')
                                           .snapshots(),
                                       builder: (BuildContext context,
-                                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                                          AsyncSnapshot<QuerySnapshot>
+                                              snapshot) {
                                         if (snapshot.hasError) {
                                           return Text('Something went wrong');
                                         }
@@ -127,7 +133,8 @@ class _MyHomePage extends State<MyHomePage> {
                                           negotiation = Flash_Card(
                                               name: element["name"],
                                               spell: element["spell"],
-                                              translation: element["translation"],
+                                              translation:
+                                                  element["translation"],
                                               example: element["example"],
                                               image: element["image"]);
                                           newListNegotiation.add(negotiation!);
@@ -150,21 +157,21 @@ class _MyHomePage extends State<MyHomePage> {
                                                 image: e.image, name: e.name));
                                       }),
                             )
-                            .toList()
-                        )),
+                            .toList())),
               ],
             ),
           );
         });
   }
-// build card contract và navigator
-  Widget _buildTopicContract() {
+
+// build card economic và navigator
+  Widget _buildTopicEconomic() {
     //build topic
     return StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection('topic')
             .doc('OHoYMlugEvSqutxOcLSr')
-            .collection('contract')
+            .collection('economic')
             .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
@@ -176,9 +183,9 @@ class _MyHomePage extends State<MyHomePage> {
           }
           //duyệt phần tử trong snapshot gán vào List
           snapshot.data!.docs.forEach((element) {
-            topicContract =
+            topicEconomic =
                 Topic(name: element['name'], image: element['image']);
-            newListTopicContract.add(topicContract!);
+            newListTopicEconomic.add(topicEconomic!);
           });
 
           return Expanded(
@@ -187,18 +194,19 @@ class _MyHomePage extends State<MyHomePage> {
                 Container(
                     margin: EdgeInsets.symmetric(horizontal: 8),
                     child: Column(
-                        children: newListTopicContract
+                        children: newListTopicEconomic
                             .map(
                               (e) =>
                                   //topic negotiation
                                   StreamBuilder<QuerySnapshot>(
                                       stream: FirebaseFirestore.instance
                                           .collection('category')
-                                          .doc('RgOwIV7v4uSLMruSc1h6')
+                                          .doc('SwmaTecJX7Hbjmk46NSS')
                                           .collection('flashcard')
                                           .snapshots(),
                                       builder: (BuildContext context,
-                                          AsyncSnapshot<QuerySnapshot> snapshot) {
+                                          AsyncSnapshot<QuerySnapshot>
+                                              snapshot) {
                                         if (snapshot.hasError) {
                                           return Text('Something went wrong');
                                         }
@@ -208,13 +216,14 @@ class _MyHomePage extends State<MyHomePage> {
                                           return Text("Loading");
                                         }
                                         snapshot.data!.docs.forEach((element) {
-                                          contract = Flash_Card(
+                                          economic = Flash_Card(
                                               name: element["name"],
                                               spell: element["spell"],
-                                              translation: element["translation"],
+                                              translation:
+                                                  element["translation"],
                                               example: element["example"],
                                               image: element["image"]);
-                                          newListContract.add(contract!);
+                                          newListEconomic.add(economic!);
                                         });
 
                                         return GestureDetector(
@@ -227,24 +236,104 @@ class _MyHomePage extends State<MyHomePage> {
                                                                 name:
                                                                     'contract',
                                                                 snapshot:
-                                                                    newListContract,
+                                                                    newListEconomic,
                                                               )));
                                             },
                                             child: _buildCardTopic(
                                                 image: e.image, name: e.name));
                                       }),
                             )
-                            .toList()
-                        )),
+                            .toList())),
               ],
             ),
           );
         });
   }
 
+  Widget _buildTopicBusiness() {
+    //build topic
+    return StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('topic')
+            .doc('OHoYMlugEvSqutxOcLSr')
+            .collection('marketing')
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Something went wrong');
+          }
 
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text("Loading");
+          }
+          //duyệt phần tử trong snapshot gán vào List
+          snapshot.data!.docs.forEach((element) {
+            topicBusiness =
+                Topic(name: element['name'], image: element['image']);
+            newListTopicEconomic.add(topicBusiness!);
+          });
 
+          return Expanded(
+            child: Column(
+              children: [
+                Container(
+                    margin: EdgeInsets.symmetric(horizontal: 8),
+                    child: Column(
+                        children: newListTopicEconomic
+                            .map(
+                              (e) =>
+                                  //topic negotiation
+                                  StreamBuilder<QuerySnapshot>(
+                                      stream: FirebaseFirestore.instance
+                                          .collection('category')
+                                          .doc('lqrB34furDjc6cgOKmla')
+                                          .collection('flashcard')
+                                          .snapshots(),
+                                      builder: (BuildContext context,
+                                          AsyncSnapshot<QuerySnapshot>
+                                              snapshot) {
+                                        if (snapshot.hasError) {
+                                          return Text('Something went wrong');
+                                        }
 
+                                        if (snapshot.connectionState ==
+                                            ConnectionState.waiting) {
+                                          return Text("Loading");
+                                        }
+                                        snapshot.data!.docs.forEach((element) {
+                                          business = Flash_Card(
+                                              name: element["name"],
+                                              spell: element["spell"],
+                                              translation:
+                                                  element["translation"],
+                                              example: element["example"],
+                                              image: element["image"]);
+                                          newListBusiness.add(business!);
+                                        });
+
+                                        return GestureDetector(
+                                            onTap: () {
+                                              Navigator.of(context)
+                                                  .pushReplacement(
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              FlashCard(
+                                                                name:
+                                                                    'business',
+                                                                snapshot:
+                                                                    newListBusiness,
+                                                              )));
+                                            },
+                                            child: _buildCardTopic(
+                                                image: e.image, name: e.name));
+                                      }),
+                            )
+                            .toList())),
+              ],
+            ),
+          );
+        });
+  }
 
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
@@ -267,16 +356,13 @@ class _MyHomePage extends State<MyHomePage> {
           ),
         ),
         body: Center(
-          child: ListView(
-            children: [
-              _buildTopicNegotiation()
-            ],
-          )
-          
-          )
-           
-          
-        );
+            child: ListView(
+          children: [
+            _buildTopicNegotiation(),
+            // _buildTopicBusiness(),
+            _buildTopicEconomic(),
+          ],
+        )));
   }
 
   Widget _builDrawer() {
@@ -303,7 +389,10 @@ class _MyHomePage extends State<MyHomePage> {
         title: Text("NoteBook"),
       ),
       ListTile(
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => About()));
+        },
         leading: Icon(Icons.info),
         title: Text("About"),
       ),

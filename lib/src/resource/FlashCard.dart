@@ -66,7 +66,7 @@ class FlashCard extends StatelessWidget {
                       children: snapshot.map((e) => 
                       // thẻ card để tạ khoảng cách giữa các flipcard
                       Card(
-                          elevation: 0.0,
+                          // elevation: 0.0,
                           margin: EdgeInsets.only(
                               left: 30.0, right: 30.0, top: 20.0, bottom: 5.0),
                           // color: Colors.blue,
@@ -108,14 +108,20 @@ class FlashCard extends StatelessWidget {
                                           image: DecorationImage(
                                               image: NetworkImage(
                                                   e.image)))),
-                                  Text(
-                                    e.name,
-                                    style: TextStyle(
-                                        fontSize: 15, fontWeight: FontWeight.bold),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      e.name,
+                                      style: TextStyle(
+                                          fontSize: 20, fontWeight: FontWeight.bold),
+                                    ),
                                   ),
-                                  Text(
-                                    e.example,
-                                    style: TextStyle(fontSize: 12),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      e.example,
+                                      style: TextStyle(fontSize: 17),
+                                    ),
                                   )
                                 ],
                               ),
