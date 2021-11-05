@@ -25,6 +25,7 @@ class FlashCard extends StatelessWidget {
     required this.name,
     required this.snapshot,
   });
+  bool _isLike = false;
 
   // _renderCard(context) {
   //   return
@@ -60,104 +61,125 @@ class FlashCard extends StatelessWidget {
                   style: TextStyle(fontSize: 14),
                 )),
             Container(
-              height: size.height * 2 / 3,
-              child: ListView(
-                     scrollDirection: Axis.horizontal,
-                      children: snapshot.map((e) => 
-                      // thẻ card để tạ khoảng cách giữa các flipcard
-                      Card(
-                          // elevation: 0.0,
-                          margin: EdgeInsets.only(
-                              left: 30.0, right: 30.0, top: 20.0, bottom: 5.0),
-                          // color: Colors.blue,
-                          child: FlipCard(
-                            
-                            direction: FlipDirection.HORIZONTAL, // lật ngang
-                            speed: 1000,
-                            onFlipDone: (status) {
-                              print(status);
-                            },
-                            front: Container(
-                              decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black38,
-                                        offset: Offset(3, 6),
-                                        blurRadius: 6)
-                                  ],
-                                  color: Color(0xFFa1bcff),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Column(
-                                // mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    height: 30,
-                                    width: 30,
-                                    // alignment: Alignment.centerRight,
-                                    margin: EdgeInsets.fromLTRB(200, 20, 0, 0),
-                                    child: Image.asset(
-                                      "assets/images/heart.png",
+                height: size.height * 2 / 3,
+                child: ListView(
+                    scrollDirection: Axis.horizontal,
+                    children: snapshot
+                        .map(
+                          (e) =>
+                              // thẻ card để tạ khoảng cách giữa các flipcard
+                              Card(
+                            // elevation: 0.0,
+                            margin: EdgeInsets.only(
+                                left: 30.0,
+                                right: 30.0,
+                                top: 20.0,
+                                bottom: 5.0),
+                            // color: Colors.blue,
+                            child: FlipCard(
+                              direction: FlipDirection.HORIZONTAL, // lật ngang
+                              speed: 1000,
+                              onFlipDone: (status) {
+                                print(status);
+                              },
+                              front: Container(
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black38,
+                                          offset: Offset(3, 6),
+                                          blurRadius: 6)
+                                    ],
+                                    color: Color(0xFFa1bcff),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Column(
+                                  // mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    InkWell(
+                                      onTap: () {},
+                                      child: Container(
+                                          height: 30,
+                                          width: 30,
+                                          alignment: Alignment.centerRight,
+                                          // margin: EdgeInsets.fromLTRB(200, 20, 0, 0),
+                                          child: IconButton(
+                                              onPressed: () {
+                                                onLike();
+                                              },
+                                              icon: Icon(
+                                                  Icons.add_reaction_outlined,
+                                                  color: _isLike
+                                                      ? Colors.red
+                                                      : Colors.white))
+                                          // Image.asset(
+                                          //   "assets/images/heart.png",
+                                          // ),
+                                          ),
                                     ),
-                                  ),
 
-                                  // ảnh
-                                  Container(
-                                      height: 200,
-                                      width: 200,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              image: NetworkImage(
-                                                  e.image)))),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      e.name,
-                                      style: TextStyle(
-                                          fontSize: 20, fontWeight: FontWeight.bold),
+                                    // ảnh
+                                    Container(
+                                        height: 200,
+                                        width: 200,
+                                        decoration: BoxDecoration(
+                                            image: DecorationImage(
+                                                image: NetworkImage(e.image)))),
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        e.name,
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                                     ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      e.example,
-                                      style: TextStyle(fontSize: 17),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            back: Container(
-                              decoration: BoxDecoration(
-                                  boxShadow: [
-                                    BoxShadow(
-                                        color: Colors.black38,
-                                        offset: Offset(3, 6),
-                                        blurRadius: 6)
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        e.example,
+                                        style: TextStyle(fontSize: 17),
+                                      ),
+                                    )
                                   ],
-                                  color: Color(0xFFa1bcff),
-                                  borderRadius: BorderRadius.circular(10)),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    e.spell,
-                                    style: TextStyle(fontSize: 15),
-                                  ),
-                                  Text(
-                                    e.translation,
-                                    style: TextStyle(fontSize: 15),
-                                  )
-                                ],
+                                ),
+                              ),
+                              back: Container(
+                                decoration: BoxDecoration(
+                                    boxShadow: [
+                                      BoxShadow(
+                                          color: Colors.black38,
+                                          offset: Offset(3, 6),
+                                          blurRadius: 6)
+                                    ],
+                                    color: Color(0xFFa1bcff),
+                                    borderRadius: BorderRadius.circular(10)),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      e.spell,
+                                      style: TextStyle(fontSize: 15),
+                                    ),
+                                    Text(
+                                      e.translation,
+                                      style: TextStyle(fontSize: 15),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ).toList()
-                    )
-            )
+                        )
+                        .toList()))
           ],
         ),
       ),
     );
+  }
+
+  void onLike() {
+    setState() {
+      _isLike = !_isLike;
+    }
   }
 }

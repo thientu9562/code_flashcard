@@ -29,7 +29,7 @@ class _SignUp_Page extends State<SignUp_Page> {
                   decoration: BoxDecoration (
                     shape: BoxShape.circle
                   ),
-                  child: Image.asset("assets/logo.png")
+                  child: Image.asset("assets/images/logo.png")
               ),
             ), 
             Padding(

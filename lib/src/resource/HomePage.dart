@@ -136,7 +136,8 @@ class _MyHomePage extends State<MyHomePage> {
                                               translation:
                                                   element["translation"],
                                               example: element["example"],
-                                              image: element["image"]);
+                                              image: element["image"], 
+                                              isFavoric: element["isFavoric"]);
                                           newListNegotiation.add(negotiation!);
                                         });
 
@@ -222,7 +223,8 @@ class _MyHomePage extends State<MyHomePage> {
                                               translation:
                                                   element["translation"],
                                               example: element["example"],
-                                              image: element["image"]);
+                                              image: element["image"], 
+                                              isFavoric: element["isFavoric"]);
                                           newListEconomic.add(economic!);
                                         });
 
@@ -307,7 +309,8 @@ class _MyHomePage extends State<MyHomePage> {
                                               translation:
                                                   element["translation"],
                                               example: element["example"],
-                                              image: element["image"]);
+                                              image: element["image"], 
+                                              isFavoric: element["isFavoric"]);
                                           newListBusiness.add(business!);
                                         });
 
