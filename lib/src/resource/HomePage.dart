@@ -4,6 +4,7 @@ import 'package:flashcard/src/model/Topic.dart';
 import 'package:flashcard/src/resource/About.dart';
 
 import 'package:flashcard/src/resource/FlashCard.dart';
+import 'package:flashcard/src/resource/Notebooks.dart';
 import 'package:flutter/material.dart';
 
 import 'package:provider/provider.dart';
@@ -251,7 +252,7 @@ class _MyHomePage extends State<MyHomePage> {
           );
         });
   }
-
+  // build card business và navigator
   Widget _buildTopicBusiness() {
     //build topic
     return StreamBuilder<QuerySnapshot>(
@@ -338,6 +339,7 @@ class _MyHomePage extends State<MyHomePage> {
         });
   }
 
+  //page
   final GlobalKey<ScaffoldState> _key = GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
@@ -367,7 +369,7 @@ class _MyHomePage extends State<MyHomePage> {
           ],
         )));
   }
-
+// build drawer
   Widget _builDrawer() {
     return ListView(children: [
       UserAccountsDrawerHeader(
@@ -387,7 +389,10 @@ class _MyHomePage extends State<MyHomePage> {
         title: Text("Home"),
       ),
       ListTile(
-        onTap: () {},
+        onTap: () {
+          Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (context) => Note()));
+        },
         leading: Icon(Icons.task),
         title: Text("NoteBook"),
       ),

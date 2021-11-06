@@ -1,3 +1,4 @@
+import 'package:flashcard/src/app_colors.dart';
 import 'package:flashcard/src/resource/HomePage.dart';
 import 'package:flutter/material.dart';
 
@@ -31,17 +32,18 @@ class About extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "About",
+                "About us",
                 style: TextStyle(
                   fontSize: 40,
-                  color: Colors.blue,
+                  color: AppColors.primaryColor,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               Image(
-                image: AssetImage("assets/images/about.png"),
+                image: AssetImage("assets/images/bg.png"),
               ),
               SizedBox(
-                height: 20,
+                height: 50,
               ),
               Container(
                 height: 280,
@@ -49,8 +51,10 @@ class About extends StatelessWidget {
                 child: Wrap(
                   children: [
                     Text(
-                      "Neru My Black Directionary,This App You Can learn English",
-                      style: TextStyle(fontSize: 22, color: Colors.black),
+                      "This English flashcard will provide a new word on the front of the card "
+                          "and a description of the card on the back to help learn English vocabulary very effectively.",
+                      style: TextStyle(fontSize: 22, color: Colors.black,
+                        fontStyle: FontStyle.italic,),
                     ),
                   ],
                 ),

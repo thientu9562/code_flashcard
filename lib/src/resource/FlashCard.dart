@@ -43,7 +43,7 @@ class FlashCard extends StatelessWidget {
                 context, MaterialPageRoute(builder: (context) => MyHomePage()));
           },
           child: Icon(
-            Icons.assignment_return,
+            Icons.arrow_back,
             size: 27,
           ),
         ),
